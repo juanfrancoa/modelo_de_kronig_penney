@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modelo de Kronig-Penney &amp; Estructura de Bandas</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- KaTeX CSS & JS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  
+  <!-- FontAwesome & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            heading: ['Space Grotesk', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              dark: '#0b0f19',
+              card: '#151c2e',
+              border: '#2a364f',
+              accent: '#38bdf8',
+              gold: '#f59e0b',
+              emerald: '#10b981',
+              rose: '#f43f5e'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #f1f5f9;
+      font-family: 'Inter', sans-serif;
+    }
+    .slide {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .slide.active {
+      display: flex;
+      opacity: 1;
+    }
+    .katex-display {
+      margin: 0.4em 0 !important;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 0.2em 0;
+    }
+    .katex {
+      font-size: 1.05em;
+    }
+    ::-webkit-scrollbar {
+      height: 4px;
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #151c2e;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #38bdf8;
+      border-radius: 4px;
+    }
+    .plot-container svg {
+      width: 100%;
+      height: 100%;
+      max-height: 340px;
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col justify-between overflow-hidden select-none">
+
+  <!-- TOP PROGRESS BAR -->
+  <div class="w-full bg-slate-900 h-1.5 relative z-50">
+    <div id="progressBar" class="bg-gradient-to-r from-sky-400 via-amber-400 to-emerald-400 h-full w-0 transition-all duration-300"></div>
+  </div>
+
+  <!-- HEADER NAVBAR -->
+  <header class="px-6 py-3 flex items-center justify-between border-b border-brand-border/60 bg-brand-dark/90 backdrop-blur-md">
+    <div class="flex items-center gap-3">
+      <span class="p-2 bg-sky-500/10 text-sky-400 rounded-lg border border-sky-500/20">
+        <i class="fa-solid fa-atom text-xl"></i>
+      </span>
+      <div>
+        <h1 class="font-heading font-bold text-base md:text-lg text-slate-100 tracking-wide">Física del Estado Sólido</h1>
+        <p class="text-xs text-slate-400">Modelo de Kronig-Penney &amp; Estructura de Bandas</p>
+      </div>
+    </div>
+    
+    <!-- SLIDE INDICATOR -->
+    <div class="flex items-center gap-4">
+      <span id="slideCounter" class="font-mono text-xs md:text-sm px-3 py-1 bg-brand-card rounded-full border border-brand-border text-sky-400 font-semibold">
+        Diapositiva 1 de 7
+      </span>
+    </div>
+  </header>
+
+  <!-- MAIN SLIDES CONTAINER -->
+  <main class="flex-1 relative overflow-y-auto px-4 py-5 md:px-10 flex items-center justify-center">
+
+    <!-- ================= SLIDE 1: INTRODUCCIÓN ================= -->
+    <div class="slide active w-full max-w-5xl flex-col gap-5 my-auto">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
+        <i class="fa-solid fa-star text-xs"></i> 1. Introducción al Modelo 1D
+      </div>
+      
+      <h2 class="font-heading text-4xl md:text-5xl font-extrabold text-white leading-tight">
+        El Modelo de <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-amber-400">Kronig-Penney</span>
+      </h2>
+      
+      <p class="text-slate-300 text-base md:text-lg leading-relaxed max-w-3xl">
+        Modelo idealizado en una dimensión que explica el origen cuántico de las <b>bandas permitidas</b> y las <b>brechas prohibidas ($E_g$)</b> cuando un electrón se desplaza en un cristal con potencial periódico.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-2">
+        <div class="bg-brand-card border border-brand-border p-5 rounded-2xl flex flex-col gap-3 hover:border-sky-500/40 transition-all">
+          <div class="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-lg font-bold">
+            <i class="fa-solid fa-chart-area"></i>
+          </div>
+          <h3 class="font-heading font-bold text-lg text-slate-100">Potencial Periódico $U(x)$</h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Representa la red cristalina como una serie alternada de pozos (ancho $a_1$) y barreras rectangulares de altura $E_0$ (ancho $a_2$), con periodo $a = a_1 + a_2$.
+          </p>
+        </div>
+
+        <div class="bg-brand-card border border-brand-border p-5 rounded-2xl flex flex-col gap-3 hover:border-amber-500/40 transition-all">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-lg font-bold">
+            <i class="fa-solid fa-wave-square"></i>
+          </div>
+          <h3 class="font-heading font-bold text-lg text-slate-100">Mecánica Cuántica</h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Resuelve la ecuación de Schrödinger 1D independiente del tiempo para un potencial estrictamente periódico donde $U(x + a) = U(x)$.
+          </p>
+        </div>
+
+        <div class="bg-brand-card border border-brand-border p-5 rounded-2xl flex flex-col gap-3 hover:border-emerald-500/40 transition-all">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg font-bold">
+            <i class="fa-solid fa-microchip"></i>
+          </div>
+          <h3 class="font-heading font-bold text-lg text-slate-100">Propiedades Eléctricas</h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Explica rigurosamente por qué ciertos materiales conducen electricidad (metales) mientras otros son aislantes o semiconductores.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 2: VISIÓN GLOBAL DEL ESPECTRO ================= -->
+    <div class="slide w-full max-w-6xl flex-col gap-5 my-auto">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
+        <i class="fa-solid fa-chart-line"></i> 2. Visión Global del Espectro
+      </div>
+
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-white">
+        Función Trascendental $f(E) = \cos(ka)$ (Rango Completo $0 \le E \le 30$)
+      </h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+        <!-- Content Column -->
+        <div class="lg:col-span-6 flex flex-col gap-3">
+          <div class="bg-brand-card border border-brand-border p-4 rounded-xl flex flex-col gap-2">
+            <h3 class="font-heading font-bold text-sm text-sky-400 flex items-center gap-2">
+              <i class="fa-solid fa-sliders"></i> El Criterio del Coseno $[-1, 1]$
+            </h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              La ecuación desacoplada exige $\cos(ka) = f(E)$. Como el coseno de un número real sólo toma valores entre $-1$ y $+1$:
+            </p>
+            <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800 text-center text-amber-300 text-xs">
+              $$\text{Bandas Permitidas: } -1 \le f(E) \le 1 \quad (k \in \mathbb{R})$$
+              $$\text{Bandas Prohibidas: } |f(E)| > 1 \quad (k \text{ complejo})$$
+            </div>
+          </div>
+
+          <div class="bg-brand-card border border-brand-border p-4 rounded-xl flex flex-col gap-2">
+            <h3 class="font-heading font-bold text-sm text-amber-400 flex items-center gap-2">
+              <i class="fa-solid fa-split"></i> Transición en la Frontera $E = E_0 = 10$
+            </h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              A la izquierda ($E < E_0$), rigen funciones hiperbólicas ($\cosh, \sinh$). A la derecha ($E > E_0$), rigen funciones trigonométricas ($\cos, \sin$).
+            </p>
+          </div>
+
+          <div class="bg-brand-card border border-brand-border p-4 rounded-xl flex flex-col gap-2">
+            <h3 class="font-heading font-bold text-sm text-emerald-400 flex items-center gap-2">
+              <i class="fa-solid fa-arrow-trend-up"></i> Comportamiento Asintótico ($E \gg E_0$)
+            </h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              A muy alta energía, la amplitud de oscilación se comprime dentro de $[-1, 1]$. Los <i>gaps</i> desaparecen y el electrón se comporta como una partícula libre.
+            </p>
+          </div>
+        </div>
+
+        <!-- Plot Column -->
+        <div class="lg:col-span-6 bg-brand-card border border-brand-border p-3.5 rounded-2xl flex flex-col items-center justify-center gap-2 shadow-xl">
+          <div id="plotGlobal" class="plot-container w-full h-72"></div>
+          <span class="text-[11px] font-mono text-slate-400 text-center">Figura 1: Gráfica unificada $f(E)$ para $E \in [0, 30]$ ($E_0 = 10$)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 3: RÉGIMEN E < E0 ================= -->
+    <div class="slide w-full max-w-6xl flex-col gap-5 my-auto">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
+        <i class="fa-solid fa-arrow-down-short-wide"></i> 3. Régimen $0 < E < E_0$
+      </div>
+
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-white">
+        Efecto Túnel &amp; Funciones Hiperbólicas ($E \in [0, 10]$)
+      </h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+        <!-- Content Column -->
+        <div class="lg:col-span-6 flex flex-col gap-3">
+          <p class="text-slate-300 text-xs md:text-sm leading-relaxed">
+            Cuando la energía del electrón es menor que la altura de la barrera ($E < E_0$), el electrón penetra la barrera clásica mediante <b>tunelamiento cuántico</b>.
+          </p>
+
+          <div class="bg-brand-card border border-brand-border p-4 rounded-xl">
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Ecuación Trascendental en Tunelamiento</h3>
+            <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-sky-300 text-center text-xs">
+              $$f(E) = \cos(\alpha a_1)\cosh(\delta a_2) - \frac{\alpha^2 - \delta^2}{2\alpha\delta}\sin(\alpha a_1)\sinh(\delta a_2)$$
+            </div>
+            <div class="grid grid-cols-2 gap-2 mt-2 text-[11px] font-mono text-slate-400">
+              <div class="bg-slate-900/60 p-1.5 rounded text-center">$\alpha = \sqrt{2mE/\hbar^2}$</div>
+              <div class="bg-slate-900/60 p-1.5 rounded text-center">$\delta = \sqrt{2m(E_0-E)/\hbar^2}$</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="bg-brand-card/70 border border-brand-border p-3 rounded-xl flex gap-2 items-start">
+              <i class="fa-solid fa-arrow-up-right-from-square text-rose-400 mt-0.5 text-sm"></i>
+              <div>
+                <h4 class="font-semibold text-xs text-white">Divergencia en $E \to 0$</h4>
+                <p class="text-[11px] text-slate-400 mt-0.5">El término $\frac{\alpha^2-\delta^2}{2\alpha\delta}$ divaga hacia $+\infty$, creando un gap prohibido masivo a energías bajas.</p>
+              </div>
+            </div>
+            <div class="bg-brand-card/70 border border-brand-border p-3 rounded-xl flex gap-2 items-start">
+              <i class="fa-solid fa-expand text-amber-400 mt-0.5 text-sm"></i>
+              <div>
+                <h4 class="font-semibold text-xs text-white">Bandas Permitidas Estrechas</h4>
+                <p class="text-[11px] text-slate-400 mt-0.5">Las funciones hiperbólicas no oscilan; amplifican la curva rápida fuera de $[-1, 1]$.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plot Column -->
+        <div class="lg:col-span-6 bg-brand-card border border-brand-border p-3.5 rounded-2xl flex flex-col items-center justify-center gap-2 shadow-xl">
+          <div id="plotRegion1" class="plot-container w-full h-72"></div>
+          <span class="text-[11px] font-mono text-slate-400 text-center">Figura 2: Detalle de $f(E)$ en el régimen de tunelamiento ($0 < E < E_0$)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 4: RÉGIMEN E > E0 ================= -->
+    <div class="slide w-full max-w-6xl flex-col gap-5 my-auto">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
+        <i class="fa-solid fa-arrow-up-right-dots"></i> 4. Régimen $E > E_0$
+      </div>
+
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-white">
+        Propagación Libre sobre la Barrera ($E \in [10, 35]$)
+      </h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+        <!-- Content Column -->
+        <div class="lg:col-span-6 flex flex-col gap-3">
+          <p class="text-slate-300 text-xs md:text-sm leading-relaxed">
+            Cuando la energía excede la barrera ($E > E_0$), el electrón tiene energía cinética positiva en toda la red y viaja sobre los pozos.
+          </p>
+
+          <div class="bg-brand-card border border-brand-border p-4 rounded-xl">
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Ecuación Trascendental Trigonométrica</h3>
+            <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-amber-300 text-center text-xs">
+              $$f(E) = \cos(\alpha a_1)\cos(\beta a_2) - \frac{\alpha^2 + \beta^2}{2\alpha\beta}\sin(\alpha a_1)\sin(\beta a_2)$$
+            </div>
+            <div class="grid grid-cols-2 gap-2 mt-2 text-[11px] font-mono text-slate-400">
+              <div class="bg-slate-900/60 p-1.5 rounded text-center">$\alpha = \sqrt{2mE/\hbar^2}$</div>
+              <div class="bg-slate-900/60 p-1.5 rounded text-center">$\beta = \sqrt{2m(E-E_0)/\hbar^2}$</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <div class="bg-brand-card/70 border border-brand-border p-3 rounded-xl">
+              <h4 class="font-semibold text-xs text-sky-400 mb-0.5">Ondas Puras</h4>
+              <p class="text-[11px] text-slate-400">Términos trigonométricos oscilatorios armónicos.</p>
+            </div>
+            <div class="bg-brand-card/70 border border-brand-border p-3 rounded-xl">
+              <h4 class="font-semibold text-xs text-amber-400 mb-0.5">Reflexión de Bragg</h4>
+              <p class="text-[11px] text-slate-400">Rebotes en escalones crean gaps periódicos residuales.</p>
+            </div>
+            <div class="bg-brand-card/70 border border-brand-border p-3 rounded-xl">
+              <h4 class="font-semibold text-xs text-emerald-400 mb-0.5">Compresión</h4>
+              <p class="text-[11px] text-slate-400">Las franjas rosas (gaps) son cada vez más delgadas.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plot Column -->
+        <div class="lg:col-span-6 bg-brand-card border border-brand-border p-3.5 rounded-2xl flex flex-col items-center justify-center gap-2 shadow-xl">
+          <div id="plotRegion2" class="plot-container w-full h-72"></div>
+          <span class="text-[11px] font-mono text-slate-400 text-center">Figura 3: Comportamiento oscilatorio de $f(E)$ para $E > E_0$ ($10 \le E \le 35$)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 5: EL VECTOR DE ONDA K ================= -->
+    <div class="slide w-full max-w-5xl flex-col gap-5 my-auto">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
+        <i class="fa-solid fa-vector-square"></i> 5. Naturaleza del Vector de Onda $k$
+      </div>
+
+      <h2 class="font-heading text-3xl md:text-4xl font-bold text-white">
+        Despeje de $k$: Caso Real vs. Caso Complejo
+      </h2>
+
+      <p class="text-xs md:text-sm text-slate-300">
+        Al despejar el vector de onda de la condición central $\cos(ka) = f(E)$:
+      </p>
+      <div class="bg-slate-900/90 border border-slate-800 p-3 rounded-xl text-center text-xs md:text-sm font-mono text-sky-300">
+        $$k = \pm \frac{1}{a}\arccos(f(E)) + \frac{2n\pi}{a}, \quad n \in \mathbb{Z}$$
+      </div>
+
+      <!-- Real vs Complex comparison -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Real k -->
+        <div class="bg-brand-card border border-emerald-500/30 p-5 rounded-2xl flex flex-col gap-3">
+          <div class="flex items-center gap-2 text-emerald-400 font-bold font-heading text-base">
+            <i class="fa-solid fa-circle-check"></i> Caso Real: $|f(E)| \le 1$
+          </div>
+          <p class="text-xs text-slate-300">
+            $\arccos(f(E))$ produce un ángulo real. El vector $k \in \mathbb{R}$ define las <b>Bandas Permitidas</b>.
+          </p>
+          <div class="bg-slate-900/80 p-3 rounded-xl text-center text-xs">
+            $$|\psi(x)|^2 = |u(x) e^{i k x}|^2 = |u(x)|^2 \cdot 1 = |u(x)|^2$$
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            La densidad de probabilidad no se extingue espacialmente. El electrón viaja libremente transportando corriente por el cristal.
+          </p>
+        </div>
+
+        <!-- Complex k -->
+        <div class="bg-brand-card border border-rose-500/30 p-5 rounded-2xl flex flex-col gap-3">
+          <div class="flex items-center gap-2 text-rose-400 font-bold font-heading text-base">
+            <i class="fa-solid fa-circle-xmark"></i> Caso Complejo: $|f(E)| > 1$
+          </div>
+          <p class="text-xs text-slate-300">
+            No existe coseno real mayor que $1$. Se requiere $k = k_r + i k_i$ (<b>Bandas Prohibidas</b>).
+          </p>
+          <div class="bg-slate-900/80 p-3 rounded-xl text-center text-xs">
+            $$\psi(x) = u(x) e^{i k_r x} e^{-k_i x} \implies |\psi(x)|^2 \propto e^{-2 k_i x}$$
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            La probabilidad diverge exponencialmente hacia un extremo ($x \to -\infty$). <b>No se puede normalizar en una red infinita</b>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 6: EL GAP DE ENERGÍA ================= -->
+    <div class="slide w-full max-w-5xl flex-col gap-5 my-auto">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
+        <i class="fa-solid fa-bullseye"></i> 6. El Origen Físico del Gap
+      </div>
+
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-white">
+        Interferencia de Bragg &amp; Transición Cuántica
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-brand-card border border-brand-border p-4 rounded-2xl flex flex-col gap-2">
+          <span class="text-2xl text-purple-400"><i class="fa-solid fa-water"></i></span>
+          <h3 class="font-heading font-bold text-sm text-white">Reflexión de Bragg</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            En los bordes de la Zona de Brillouin ($ka = n\pi$), las reflexiones en los átomos interfieren totalmente de forma destructiva en el avance.
+          </p>
+        </div>
+
+        <div class="bg-brand-card border border-brand-border p-4 rounded-2xl flex flex-col gap-2">
+          <span class="text-2xl text-amber-400"><i class="fa-solid fa-ghost"></i></span>
+          <h3 class="font-heading font-bold text-sm text-white">Onda Evanescente</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Un electrón inyectado con energía en el gap sufre atenuación exponencial en pocos nanómetros y sufre <b>reflexión total</b>.
+          </p>
+        </div>
+
+        <div class="bg-brand-card border border-brand-border p-4 rounded-2xl flex flex-col gap-2">
+          <span class="text-2xl text-sky-400"><i class="fa-solid fa-radio"></i></span>
+          <h3 class="font-heading font-bold text-sm text-white">Frecuencia Prohibida</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            El gap <b>no es un lugar físico</b> entre átomos, sino un rango de frecuencias/energías que la geometría cristalina no puede sostener.
+          </p>
+        </div>
+      </div>
+
+      <!-- Quantum Jump Clarification Box -->
+      <div class="bg-slate-900 border border-purple-500/30 p-4 rounded-2xl flex flex-col gap-2">
+        <h4 class="font-heading font-bold text-xs md:text-sm text-purple-300 flex items-center gap-2">
+          <i class="fa-solid fa-bolt"></i> ¿Cómo "salta" el electrón el gap si la onda no habita en él?
+        </h4>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          El "salto" cuántico no es un desplazamiento espacial flotando a través de una zanja. Es una <b>transición instantánea en el modo de frecuencia de la onda</b> al absorber una cantidad exacta de energía externa ($\Delta E \ge E_g$), pasando inmediatamente de la frecuencia de valencia a la de conducción.
+        </p>
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 7: CLASIFICACIÓN FÍSICA ================= -->
+    <div class="slide w-full max-w-5xl flex-col gap-5 my-auto">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
+        <i class="fa-solid fa-layer-group"></i> 7. Estados Estacionarios &amp; Clasificación
+      </div>
+
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-white">
+        Estructura de Bandas en Materiales Reales
+      </h2>
+
+      <!-- Materials Comparison Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Conductors -->
+        <div class="bg-brand-card border border-emerald-500/30 p-4 rounded-2xl flex flex-col gap-2.5">
+          <span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-bold rounded-md w-fit">CONDUCTORES</span>
+          <h3 class="font-heading font-bold text-base text-white">Gap Nulo ($E_g = 0$)</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            La banda de valencia y de conducción se solapan. Los electrones tienen estados disponibles inmediatamente superiores para conducir corriente.
+          </p>
+        </div>
+
+        <!-- Semiconductors -->
+        <div class="bg-brand-card border border-amber-500/30 p-4 rounded-2xl flex flex-col gap-2.5">
+          <span class="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[11px] font-bold rounded-md w-fit">SEMICONDUCTORES</span>
+          <h3 class="font-heading font-bold text-base text-white">Gap Moderado ($E_g \approx 1\text{ eV}$)</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            A $0\text{ K}$ son aislantes. La energía térmica a temperatura ambiente promueve electrones a la banda de conducción (ej. Si, Ge).
+          </p>
+        </div>
+
+        <!-- Insulators -->
+        <div class="bg-brand-card border border-rose-500/30 p-4 rounded-2xl flex flex-col gap-2.5">
+          <span class="px-2.5 py-1 bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[11px] font-bold rounded-md w-fit">AISLANTES</span>
+          <h3 class="font-heading font-bold text-base text-white">Gap Amplio ($E_g > 4\text{ eV}$)</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            La brecha prohibida es insuperable térmicamente. Exige tanta energía que el cristal se destruye antes de conducir (ej. Diamante, Vidrio).
+          </p>
+        </div>
+      </div>
+
+      <!-- Conclusion Banner -->
+      <div class="bg-gradient-to-r from-sky-900/40 via-brand-card to-amber-900/40 border border-brand-border p-4 rounded-2xl flex items-center justify-between">
+        <div>
+          <h4 class="font-heading font-bold text-xs md:text-sm text-white">Definición de Estado Estacionario</h4>
+          <p class="text-xs text-slate-300 mt-0.5">Un estado con energía fija cuya densidad de probabilidad $|\Psi(x,t)|^2 = |\psi(x)|^2$ permanece constante en el tiempo.</p>
+        </div>
+        <div class="text-2xl text-amber-400 pl-3">
+          <i class="fa-solid fa-atom"></i>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER NAVIGATION BAR -->
+  <footer class="px-6 py-3 border-t border-brand-border/60 bg-brand-dark/95 backdrop-blur-md flex items-center justify-between">
+    <!-- DOTS NAVIGATION -->
+    <div id="dotsNav" class="flex items-center gap-1.5">
+      <!-- Dynamic dots -->
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="flex items-center gap-3">
+      <button id="prevBtn" onclick="changeSlide(-1)" class="px-3.5 py-1.5 bg-brand-card hover:bg-slate-800 border border-brand-border text-slate-300 hover:text-white rounded-xl text-xs md:text-sm font-semibold transition-all flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+        <i class="fa-solid fa-chevron-left text-xs"></i> Anterior
+      </button>
+      <button id="nextBtn" onclick="changeSlide(1)" class="px-4 py-1.5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white rounded-xl text-xs md:text-sm font-semibold shadow-lg shadow-sky-500/20 transition-all flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+        Siguiente <i class="fa-solid fa-chevron-right text-xs"></i>
+      </button>
+    </div>
+  </footer>
+
+  <!-- SCRIPT Section -->
+  <script>
+    // --- MATHEMATICAL EVALUATION OF KRONIG-PENNEY FUNCTION f(E) ---
+    function calcFE(E, E0 = 10.0, a1 = 1.0, a2 = 0.5, m = 1.0, hbar = 1.0) {
+      if (E <= 0.001) return 10.0; // Divergence near E -> 0
+      const alpha = Math.sqrt(2 * m * E) / hbar;
+      if (E < E0) {
+        const delta = Math.sqrt(2 * m * (E0 - E)) / hbar;
+        const coshD = Math.cosh(delta * a2);
+        const sinhD = Math.sinh(delta * a2);
+        const cosA = Math.cos(alpha * a1);
+        const sinA = Math.sin(alpha * a1);
+        const factor = (alpha * alpha - delta * delta) / (2 * alpha * delta);
+        return cosA * coshD - factor * sinA * sinhD;
+      } else if (Math.abs(E - E0) < 0.0001) {
+        const cosA = Math.cos(alpha * a1);
+        const sinA = Math.sin(alpha * a1);
+        return cosA - (alpha * a2 / 2) * sinA;
+      } else {
+        const beta = Math.sqrt(2 * m * (E - E0)) / hbar;
+        const cosB = Math.cos(beta * a2);
+        const sinB = Math.sin(beta * a2);
+        const cosA = Math.cos(alpha * a1);
+        const sinA = Math.sin(alpha * a1);
+        const factor = (alpha * alpha + beta * beta) / (2 * alpha * beta);
+        return cosA * cosB - factor * sinA * sinB;
+      }
+    }
+
+    // --- HIGH-PRECISION SVG GRAPH RENDERER ---
+    function renderPlot(containerId, minE, maxE, titleText, showE0Line = true) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+
+      const width = 750;
+      const height = 360;
+      const margin = { top: 35, right: 25, bottom: 45, left: 55 };
+      const plotW = width - margin.left - margin.right;
+      const plotH = height - margin.top - margin.bottom;
+
+      const minY = -3.0;
+      const maxY = 3.0;
+
+      const scaleX = (e) => margin.left + ((e - minE) / (maxE - minE)) * plotW;
+      const scaleY = (f) => margin.top + plotH - ((f - minY) / (maxY - minY)) * plotH;
+
+      // Sample points
+      const numPoints = 800;
+      const points = [];
+      const step = (maxE - minE) / numPoints;
+      for (let i = 0; i <= numPoints; i++) {
+        const e = minE + i * step;
+        const f = calcFE(e);
+        points.push({ e, f });
+      }
+
+      // Build SVG string
+      let svg = `<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" class="w-full h-full font-sans">`;
+      
+      // Background
+      svg += `<rect width="${width}" height="${height}" fill="#0d1322" rx="12" />`;
+
+      // Find band intervals for shading
+      // Shading regions: green where |f| <= 1, pink where |f| > 1
+      for (let i = 0; i < points.length - 1; i++) {
+        const p1 = points[i];
+        const p2 = points[i+1];
+        const x1 = scaleX(p1.e);
+        const x2 = scaleX(p2.e);
+
+        const isAllowed = Math.abs((p1.f + p2.f)/2) <= 1.0;
+        const color = isAllowed ? 'rgba(16, 185, 129, 0.22)' : 'rgba(244, 63, 94, 0.12)';
+        
+        svg += `<rect x="${x1}" y="${margin.top}" width="${Math.max(1, x2 - x1)}" height="${plotH}" fill="${color}" />`;
+      }
+
+      // Grid Lines Y
+      [-2, -1, 0, 1, 2].forEach(yVal => {
+        const yPx = scaleY(yVal);
+        const stroke = (yVal === 0) ? '#475569' : '#1e293b';
+        const dash = (yVal === 0) ? '' : 'stroke-dasharray="4,4"';
+        svg += `<line x1="${margin.left}" y1="${yPx}" x2="${width - margin.right}" y2="${yPx}" stroke="${stroke}" stroke-width="1" ${dash} />`;
+        svg += `<text x="${margin.left - 10}" y="${yPx + 4}" fill="#94a3b8" font-size="11" text-anchor="end font-mono">${yVal}</text>`;
+      });
+
+      // Grid Lines & Ticks X
+      const xStep = (maxE - minE) > 15 ? 5 : 2;
+      for (let xVal = Math.ceil(minE / xStep) * xStep; xVal <= maxE; xVal += xStep) {
+        const xPx = scaleX(xVal);
+        svg += `<line x1="${xPx}" y1="${margin.top}" x2="${xPx}" y2="${height - margin.bottom}" stroke="#1e293b" stroke-width="1" stroke-dasharray="3,3" />`;
+        svg += `<text x="${xPx}" y="${height - margin.bottom + 18}" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">${xVal}</text>`;
+      }
+
+      // Limits f(E) = +1 and -1 (Red dashed)
+      const yPlus1 = scaleY(1);
+      const yMinus1 = scaleY(-1);
+      svg += `<line x1="${margin.left}" y1="${yPlus1}" x2="${width - margin.right}" y2="${yPlus1}" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="6,4" />`;
+      svg += `<line x1="${margin.left}" y1="${yMinus1}" x2="${width - margin.right}" y2="${yMinus1}" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="6,4" />`;
+
+      // Vertical line E = E0 = 10 if in view
+      if (showE0Line && minE <= 10 && maxE >= 10) {
+        const xE0 = scaleX(10);
+        svg += `<line x1="${xE0}" y1="${margin.top}" x2="${xE0}" y2="${height - margin.bottom}" stroke="#a855f7" stroke-width="1.8" stroke-dasharray="4,4" />`;
+        svg += `<text x="${xE0 + 6}" y="${margin.top + 15}" fill="#c084fc" font-size="11" font-weight="bold">E = E₀</text>`;
+      }
+
+      // Curve Path f(E)
+      let pathD = '';
+      let started = false;
+      points.forEach(p => {
+        const x = scaleX(p.e);
+        const y = Math.max(margin.top - 10, Math.min(height - margin.bottom + 10, scaleY(p.f)));
+        if (!started) {
+          pathD += `M ${x} ${y}`;
+          started = true;
+        } else {
+          pathD += ` L ${x} ${y}`;
+        }
+      });
+      svg += `<path d="${pathD}" stroke="#38bdf8" stroke-width="2.6" fill="none" stroke-linejoin="round" />`;
+
+      // Axes Borders
+      svg += `<rect x="${margin.left}" y="${margin.top}" width="${plotW}" height="${plotH}" fill="none" stroke="#334155" stroke-width="1.5" />`;
+
+      // Title & Labels
+      svg += `<text x="${width / 2}" y="22" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle">${titleText}</text>`;
+      svg += `<text x="${width / 2}" y="${height - 10}" fill="#cbd5e1" font-size="11" font-weight="500" text-anchor="middle">Energía del electrón (E)</text>`;
+      svg += `<text x="18" y="${height / 2}" fill="#cbd5e1" font-size="11" font-weight="500" text-anchor="middle" transform="rotate(-90 18 ${height/2})">f(E) = cos(ka)</text>`;
+
+      // Legend Box (Top Right)
+      const legX = width - margin.right - 185;
+      const legY = margin.top + 10;
+      svg += `<g transform="translate(${legX}, ${legY})">`;
+      svg += `<rect width="175" height="75" fill="#0b0f19" fill-opacity="0.85" stroke="#334155" stroke-width="1" rx="6" />`;
+      svg += `<line x1="10" y1="15" x2="30" y2="15" stroke="#38bdf8" stroke-width="2.5" />`;
+      svg += `<text x="36" y="18" fill="#e2e8f0" font-size="10">f(E)</text>`;
+      svg += `<line x1="10" y1="32" x2="30" y2="32" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="4,3" />`;
+      svg += `<text x="36" y="35" fill="#e2e8f0" font-size="10">Límites f(E) = ±1</text>`;
+      svg += `<rect x="10" y="45" width="20" height="10" fill="rgba(16, 185, 129, 0.4)" />`;
+      svg += `<text x="36" y="53" fill="#e2e8f0" font-size="10">Bandas Permitidas</text>`;
+      svg += `<rect x="10" y="60" width="20" height="10" fill="rgba(244, 63, 94, 0.3)" />`;
+      svg += `<text x="36" y="68" fill="#e2e8f0" font-size="10">Bandas Prohibidas</text>`;
+      svg += `</g>`;
+
+      svg += `</svg>`;
+      container.innerHTML = svg;
+    }
+
+    // --- SLIDES NAVIGATION LOGIC ---
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function initKaTeX() {
+      if (typeof renderMathInElement === 'function') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+
+    function setupDots() {
+      const dotsNav = document.getElementById('dotsNav');
+      dotsNav.innerHTML = '';
+      for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('button');
+        dot.className = `h-2 rounded-full transition-all ${i === 0 ? 'bg-sky-400 w-6' : 'bg-slate-700 w-2 hover:bg-slate-500'}`;
+        dot.onclick = () => goToSlide(i);
+        dotsNav.appendChild(dot);
+      }
+    }
+
+    function updateSlide() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      document.getElementById('slideCounter').innerText = `Diapositiva ${currentSlide + 1} de ${totalSlides}`;
+      const progressPercent = ((currentSlide + 1) / totalSlides) * 100;
+      document.getElementById('progressBar').style.width = `${progressPercent}%`;
+
+      document.getElementById('prevBtn').disabled = currentSlide === 0;
+      document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+
+      const dots = document.getElementById('dotsNav').children;
+      for (let i = 0; i < dots.length; i++) {
+        if (i === currentSlide) {
+          dots[i].className = 'w-6 h-2 rounded-full bg-sky-400 transition-all';
+        } else {
+          dots[i].className = 'w-2 h-2 rounded-full bg-slate-700 hover:bg-slate-500 transition-all';
+        }
+      }
+
+      // Render graphs if visiting relevant slides
+      if (currentSlide === 1) {
+        renderPlot('plotGlobal', 0, 30, 'Función Trascendental Kronig-Penney (E = 0 a 30)', true);
+      } else if (currentSlide === 2) {
+        renderPlot('plotRegion1', 0, 10, 'Régimen de Tunelamiento: 0 < E < E₀ (Funciones Hiperbólicas)', true);
+      } else if (currentSlide === 3) {
+        renderPlot('plotRegion2', 10, 35, 'Régimen de Propagación: E > E₀ (Funciones Trigonométricas)', false);
+      }
+
+      initKaTeX();
+    }
+
+    function changeSlide(dir) {
+      const newIndex = currentSlide + dir;
+      if (newIndex >= 0 && newIndex < totalSlides) {
+        currentSlide = newIndex;
+        updateSlide();
+      }
+    }
+
+    function goToSlide(index) {
+      if (index >= 0 && index < totalSlides) {
+        currentSlide = index;
+        updateSlide();
+      }
+    }
+
+    // Keyboard controls
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'Space') changeSlide(1);
+      else if (e.key === 'ArrowLeft') changeSlide(-1);
+    });
+
+    // Touch swipe support
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].screenX;
+      if (touchEndX < touchStartX - 50) changeSlide(1);
+      if (touchEndX > touchStartX + 50) changeSlide(-1);
+    });
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      setupDots();
+      updateSlide();
+      setTimeout(initKaTeX, 300);
+    });
+  </script>
+</body>
+</html>
