@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modelo de Kronig-Penney &amp; Estructura de Bandas</title>
+  <title>Modelo de Kronig-Penney & Estructura de Bandas</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -76,7 +76,12 @@
       background: #38bdf8;
       border-radius: 4px;
     }
+    .plot-container {
+      width: 100%;
+      min-height: 270px;
+    }
     .plot-container svg {
+      display: block;
       width: 100%;
       height: 100%;
       max-height: 340px;
@@ -98,22 +103,22 @@
       </span>
       <div>
         <h1 class="font-heading font-bold text-base md:text-lg text-slate-100 tracking-wide">Física del Estado Sólido</h1>
-        <p class="text-xs text-slate-400">Modelo de Kronig-Penney &amp; Estructura de Bandas</p>
+        <p class="text-xs text-slate-400">Modelo de Kronig-Penney & Estructura de Bandas</p>
       </div>
     </div>
     
     <!-- SLIDE INDICATOR -->
     <div class="flex items-center gap-4">
       <span id="slideCounter" class="font-mono text-xs md:text-sm px-3 py-1 bg-brand-card rounded-full border border-brand-border text-sky-400 font-semibold">
-        Diapositiva 1 de 7
+        Diapositiva 1 de 10
       </span>
     </div>
   </header>
 
   <!-- MAIN SLIDES CONTAINER -->
-  <main class="flex-1 relative overflow-y-auto px-4 py-5 md:px-10 flex items-center justify-center">
+  <main id="mainContainer" class="flex-1 relative overflow-y-auto px-4 py-5 md:px-10 flex items-center justify-center">
 
-    <!-- ================= SLIDE 1: INTRODUCCIÓN ================= -->
+    <!-- ================= SLIDE 1: INTRODUCCIÓN (ORIGINAL) ================= -->
     <div class="slide active w-full max-w-5xl flex-col gap-5 my-auto">
       <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
         <i class="fa-solid fa-star text-xs"></i> 1. Introducción al Modelo 1D
@@ -132,7 +137,7 @@
           <div class="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-lg font-bold">
             <i class="fa-solid fa-chart-area"></i>
           </div>
-          <h3 class="font-heading font-bold text-lg text-slate-100">Potencial Periódico $U(x)$</h3>
+          <h3 class="font-heading font-bold text-lg text-slate-100">Potencial Periódico $E_p(x)$</h3>
           <p class="text-sm text-slate-400 leading-relaxed">
             Representa la red cristalina como una serie alternada de pozos (ancho $a_1$) y barreras rectangulares de altura $E_0$ (ancho $a_2$), con periodo $a = a_1 + a_2$.
           </p>
@@ -144,7 +149,7 @@
           </div>
           <h3 class="font-heading font-bold text-lg text-slate-100">Mecánica Cuántica</h3>
           <p class="text-sm text-slate-400 leading-relaxed">
-            Resuelve la ecuación de Schrödinger 1D independiente del tiempo para un potencial estrictamente periódico donde $U(x + a) = U(x)$.
+            Resuelve la ecuación de Schrödinger 1D independiente del tiempo para un potencial estrictamente periódico donde $E_p(x + a) = E_p(x)$.
           </p>
         </div>
 
@@ -160,10 +165,166 @@
       </div>
     </div>
 
-    <!-- ================= SLIDE 2: VISIÓN GLOBAL DEL ESPECTRO ================= -->
+    <!-- ================= SLIDE 2: PROCEDIMIENTO INCISO (A) ================= -->
+    <div class="slide w-full max-w-6xl flex-col gap-4 my-auto">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
+        <i class="fa-solid fa-square-root-variable"></i> 2. Procedimiento — Inciso (a)
+      </div>
+
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-white">
+        Ecuaciones de Schrödinger por Región y Condiciones de Frontera
+      </h2>
+
+      <p class="text-xs md:text-sm text-slate-300">
+        El potencial periódico definido en el problema es $E_p(x) = E_0$ en las barreras ($-a_2 \le x \le 0$ y $a_1 \le x \le a_1+a_2$) y $E_p(x) = 0$ en el pozo ($0 \le x \le a_1$), con periodo $a = a_1 + a_2$:
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-brand-card border border-sky-500/30 p-4 rounded-xl flex flex-col gap-2">
+          <span class="text-xs font-bold text-sky-400 uppercase">Región I ($-a_2 \le x \le 0$, $E_p = E_0$)</span>
+          <div class="bg-slate-900 p-2.5 rounded-lg text-xs text-slate-200">
+            $$-\frac{\hbar^2}{2m_e}\frac{d^2\psi_I}{dx^2} + E_0\psi_I = E\psi_I$$
+            $$\psi_I(x) = C e^{\delta x} + D e^{-\delta x} \quad (E < E_0)$$
+          </div>
+          <p class="text-[11px] font-mono text-sky-300 text-center">$\delta = \sqrt{\frac{2m_e(E_0 - E)}{\hbar^2}}$</p>
+        </div>
+
+        <div class="bg-brand-card border border-emerald-500/30 p-4 rounded-xl flex flex-col gap-2">
+          <span class="text-xs font-bold text-emerald-400 uppercase">Región II ($0 \le x \le a_1$, $E_p = 0$)</span>
+          <div class="bg-slate-900 p-2.5 rounded-lg text-xs text-slate-200">
+            $$-\frac{\hbar^2}{2m_e}\frac{d^2\psi_{II}}{dx^2} = E\psi_{II}$$
+            $$\psi_{II}(x) = A e^{i\alpha x} + B e^{-i\alpha x}$$
+          </div>
+          <p class="text-[11px] font-mono text-emerald-300 text-center">$\alpha = \sqrt{\frac{2m_e E}{\hbar^2}}$</p>
+        </div>
+
+        <div class="bg-brand-card border border-amber-500/30 p-4 rounded-xl flex flex-col gap-2">
+          <span class="text-xs font-bold text-amber-400 uppercase">Región III ($a_1 \le x \le a_1+a_2$, $E_p = E_0$)</span>
+          <div class="bg-slate-900 p-2.5 rounded-lg text-xs text-slate-200">
+            $$-\frac{\hbar^2}{2m_e}\frac{d^2\psi_{III}}{dx^2} + E_0\psi_{III} = E\psi_{III}$$
+            $$\psi_{III}(x) = F e^{\delta x} + G e^{-\delta x} \quad (E < E_0)$$
+          </div>
+          <p class="text-[11px] font-mono text-amber-300 text-center">Si $E > E_0$: $\delta \to i\beta, \ \beta = \sqrt{\frac{2m_e(E-E_0)}{\hbar^2}}$</p>
+        </div>
+      </div>
+
+      <div class="bg-brand-card border border-brand-border p-4 rounded-xl flex flex-col gap-2">
+        <h3 class="font-heading font-bold text-sm text-white flex items-center gap-2">
+          <i class="fa-solid fa-link text-sky-400"></i> Condiciones de Frontera (Continuidad de $\psi$ y $\psi'$)
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
+            <p class="text-amber-400 font-semibold mb-1">En $x = 0$ (Frontera I $\leftrightarrow$ II):</p>
+            $$\psi_I(0) = \psi_{II}(0) \quad \text{y} \quad \left.\frac{d\psi_I}{dx}\right|_{x=0} = \left.\frac{d\psi_{II}}{dx}\right|_{x=0}$$
+          </div>
+          <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
+            <p class="text-emerald-400 font-semibold mb-1">En $x = a_1$ (Frontera II $\leftrightarrow$ III):</p>
+            $$\psi_{II}(a_1) = \psi_{III}(a_1) \quad \text{y} \quad \left.\frac{d\psi_{II}}{dx}\right|_{x=a_1} = \left.\frac{d\psi_{III}}{dx}\right|_{x=a_1}$$
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 3: PROCEDIMIENTO INCISO (B) ================= -->
+    <div class="slide w-full max-w-6xl flex-col gap-4 my-auto">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
+        <i class="fa-solid fa-wave-square"></i> 3. Procedimiento — Inciso (b)
+      </div>
+
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-white">
+        Teorema de Bloch y Sistema Lineal Homogéneo
+      </h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+        <div class="lg:col-span-5 bg-brand-card border border-brand-border p-4 rounded-xl flex flex-col justify-between gap-3">
+          <div>
+            <h3 class="font-heading font-bold text-sm text-purple-300 mb-1.5">1. Aplicación del Teorema de Bloch</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Dado que $E_p(x + a) = E_p(x)$, las eigenfunciones tienen la forma $\psi(x) = u_k(x)e^{ikx}$ con $u_k(x+a)=u_k(x)$, lo que implica:
+            </p>
+            <div class="bg-slate-900 p-2.5 rounded-lg my-2 text-xs text-sky-300 text-center">
+              $$\psi(x + a) = e^{ika}\psi(x)$$
+            </div>
+          </div>
+
+          <div>
+            <h3 class="font-heading font-bold text-sm text-amber-300 mb-1.5">2. Relación entre Región III y Región I</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Como la Región III ($a_1 \le x \le a_1+a_2$) es la Región I ($-a_2 \le x \le 0$) desplazada en $+a$, evaluando en $x = a_1$ ($a_1 - a = -a_2$):
+            </p>
+            <div class="bg-slate-900 p-2.5 rounded-lg mt-2 text-xs text-amber-200 text-center">
+              $$\psi_{III}(a_1) = e^{ika}\psi_I(-a_2)$$
+              $$\psi'_{III}(a_1) = e^{ika}\psi'_I(-a_2)$$
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 bg-brand-card border border-brand-border p-4 rounded-xl flex flex-col justify-between gap-3">
+          <h3 class="font-heading font-bold text-sm text-emerald-400">3. Sistema $4 \times 4$ para $(A, B, C, D)$ con $0 < E < E_0$</h3>
+          <p class="text-xs text-slate-300">
+            Reemplazando $\psi_{II}(x) = Ae^{i\alpha x} + Be^{-i\alpha x}$ y $\psi_I(x) = Ce^{\delta x} + De^{-\delta x}$ en las 4 condiciones de frontera:
+          </p>
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs text-slate-200">
+            $$\begin{aligned}
+            (1)\quad & A + B - C - D = 0 \\
+            (2)\quad & i\alpha A - i\alpha B - \delta C + \delta D = 0 \\
+            (3)\quad & A e^{i\alpha a_1} + B e^{-i\alpha a_1} - C e^{ika - \delta a_2} - D e^{ika + \delta a_2} = 0 \\
+            (4)\quad & i\alpha A e^{i\alpha a_1} - i\alpha B e^{-i\alpha a_1} - \delta C e^{ika - \delta a_2} + \delta D e^{ika + \delta a_2} = 0
+            \end{aligned}$$
+          </div>
+          <div class="bg-sky-500/10 border border-sky-500/30 p-2.5 rounded-lg text-xs text-sky-200 text-center">
+            Para evitar la solución trivial $A=B=C=D=0$, exigimos $\det(M) = 0$.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 4: PROCEDIMIENTO INCISOS (C) Y (D) ================= -->
+    <div class="slide w-full max-w-6xl flex-col gap-4 my-auto">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
+        <i class="fa-solid fa-calculator"></i> 4. Procedimiento — Incisos (c) y (d)
+      </div>
+
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-white">
+        Deducción de las Ecuaciones Trascendentales
+      </h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="bg-brand-card border border-sky-500/30 p-4 rounded-xl flex flex-col gap-2">
+          <h3 class="font-heading font-bold text-sm text-sky-400">Inciso (c): Caso $0 < E < E_0$</h3>
+          <p class="text-xs text-slate-300">De (1) y (2) despejamos $C$ y $D$ en términos de $A$ y $B$:</p>
+          <div class="bg-slate-900 p-2.5 rounded-lg text-[11px] text-slate-200">
+            $$C = \frac{1}{2}\left[\left(1 + \frac{i\alpha}{\delta}\right)A + \left(1 - \frac{i\alpha}{\delta}\right)B\right], \quad D = \frac{1}{2}\left[\left(1 - \frac{i\alpha}{\delta}\right)A + \left(1 + \frac{i\alpha}{\delta}\right)B\right]$$
+          </div>
+          <p class="text-xs text-slate-300">Al sustituir en (3) y (4), anular el determinante $2\times 2$ en $(A,B)$, dividir entre $e^{ika}$ y usar $\cosh x = \frac{e^x+e^{-x}}{2}$, $\sinh x = \frac{e^x-e^{-x}}{2}$:</p>
+          <div class="bg-sky-950/70 border border-sky-500/40 p-2.5 rounded-lg text-xs text-sky-300 text-center">
+            $$\cos(ka) = \cos(\alpha a_1)\cosh(\delta a_2) - \frac{\alpha^2 - \delta^2}{2\alpha\delta}\sin(\alpha a_1)\sinh(\delta a_2)$$
+          </div>
+        </div>
+
+        <div class="bg-brand-card border border-amber-500/30 p-4 rounded-xl flex flex-col gap-2">
+          <h3 class="font-heading font-bold text-sm text-amber-400">Inciso (d): Caso $E > E_0$</h3>
+          <p class="text-xs text-slate-300">
+            Para $E > E_0$, el radicando de $\delta$ es negativo y se relaciona con $\beta$:
+          </p>
+          <div class="bg-slate-900 p-2.5 rounded-lg text-xs text-slate-200 text-center">
+            $$\delta = \sqrt{\frac{2m_e(E_0 - E)}{\hbar^2}} = i\sqrt{\frac{2m_e(E - E_0)}{\hbar^2}} = i\beta$$
+          </div>
+          <p class="text-xs text-slate-300">Aplicando $\cosh(i\beta a_2) = \cos(\beta a_2)$ y $\sinh(i\beta a_2) = i\sin(\beta a_2)$:</p>
+          <div class="bg-slate-900 p-2 rounded-lg text-[11px] text-emerald-300 text-center">
+            $$-\frac{\alpha^2 - (i\beta)^2}{2\alpha(i\beta)}\sin(\alpha a_1)\big[i\sin(\beta a_2)\big] = -\frac{\alpha^2 + \beta^2}{2\alpha\beta}\sin(\alpha a_1)\sin(\beta a_2)$$
+          </div>
+          <div class="bg-amber-950/60 border border-amber-500/40 p-2.5 rounded-lg text-xs text-amber-300 text-center">
+            $$\cos(ka) = \cos(\alpha a_1)\cos(\beta a_2) - \frac{\alpha^2 + \beta^2}{2\alpha\beta}\sin(\alpha a_1)\sin(\beta a_2)$$
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 5: VISIÓN GLOBAL DEL ESPECTRO (ORIGINAL SLIDE 2) ================= -->
     <div class="slide w-full max-w-6xl flex-col gap-5 my-auto">
       <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
-        <i class="fa-solid fa-chart-line"></i> 2. Visión Global del Espectro
+        <i class="fa-solid fa-chart-line"></i> 5. Visión Global del Espectro
       </div>
 
       <h2 class="font-heading text-2xl md:text-3xl font-bold text-white">
@@ -188,7 +349,7 @@
 
           <div class="bg-brand-card border border-brand-border p-4 rounded-xl flex flex-col gap-2">
             <h3 class="font-heading font-bold text-sm text-amber-400 flex items-center gap-2">
-              <i class="fa-solid fa-split"></i> Transición en la Frontera $E = E_0 = 10$
+              <i class="fa-solid fa-code-branch"></i> Transición en la Frontera $E = E_0 = 10$
             </h3>
             <p class="text-xs text-slate-300 leading-relaxed">
               A la izquierda ($E < E_0$), rigen funciones hiperbólicas ($\cosh, \sinh$). A la derecha ($E > E_0$), rigen funciones trigonométricas ($\cos, \sin$).
@@ -213,14 +374,14 @@
       </div>
     </div>
 
-    <!-- ================= SLIDE 3: RÉGIMEN E < E0 ================= -->
+    <!-- ================= SLIDE 6: RÉGIMEN E < E0 (ORIGINAL SLIDE 3) ================= -->
     <div class="slide w-full max-w-6xl flex-col gap-5 my-auto">
       <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
-        <i class="fa-solid fa-arrow-down-short-wide"></i> 3. Régimen $0 < E < E_0$
+        <i class="fa-solid fa-arrow-down-short-wide"></i> 6. Régimen $0 < E < E_0$
       </div>
 
       <h2 class="font-heading text-2xl md:text-3xl font-bold text-white">
-        Efecto Túnel &amp; Funciones Hiperbólicas ($E \in [0, 10]$)
+        Efecto Túnel & Funciones Hiperbólicas ($E \in [0, 10]$)
       </h2>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
@@ -236,8 +397,8 @@
               $$f(E) = \cos(\alpha a_1)\cosh(\delta a_2) - \frac{\alpha^2 - \delta^2}{2\alpha\delta}\sin(\alpha a_1)\sinh(\delta a_2)$$
             </div>
             <div class="grid grid-cols-2 gap-2 mt-2 text-[11px] font-mono text-slate-400">
-              <div class="bg-slate-900/60 p-1.5 rounded text-center">$\alpha = \sqrt{2mE/\hbar^2}$</div>
-              <div class="bg-slate-900/60 p-1.5 rounded text-center">$\delta = \sqrt{2m(E_0-E)/\hbar^2}$</div>
+              <div class="bg-slate-900/60 p-1.5 rounded text-center">$\alpha = \sqrt{2m_e E/\hbar^2}$</div>
+              <div class="bg-slate-900/60 p-1.5 rounded text-center">$\delta = \sqrt{2m_e(E_0-E)/\hbar^2}$</div>
             </div>
           </div>
 
@@ -246,14 +407,14 @@
               <i class="fa-solid fa-arrow-up-right-from-square text-rose-400 mt-0.5 text-sm"></i>
               <div>
                 <h4 class="font-semibold text-xs text-white">Divergencia en $E \to 0$</h4>
-                <p class="text-[11px] text-slate-400 mt-0.5">El término $\frac{\alpha^2-\delta^2}{2\alpha\delta}$ divaga hacia $+\infty$, creando un gap prohibido masivo a energías bajas.</p>
+                <p class="text-[11px] text-slate-400 mt-0.5">El término $\frac{\alpha^2-\delta^2}{2\alpha\delta}$ diverge hacia $+\infty$, creando un gap prohibido masivo a energías bajas.</p>
               </div>
             </div>
             <div class="bg-brand-card/70 border border-brand-border p-3 rounded-xl flex gap-2 items-start">
               <i class="fa-solid fa-expand text-amber-400 mt-0.5 text-sm"></i>
               <div>
                 <h4 class="font-semibold text-xs text-white">Bandas Permitidas Estrechas</h4>
-                <p class="text-[11px] text-slate-400 mt-0.5">Las funciones hiperbólicas no oscilan; amplifican la curva rápida fuera de $[-1, 1]$.</p>
+                <p class="text-[11px] text-slate-400 mt-0.5">Las funciones hiperbólicas no oscilan; amplifican la curva rápidamente fuera de $[-1, 1]$.</p>
               </div>
             </div>
           </div>
@@ -267,10 +428,10 @@
       </div>
     </div>
 
-    <!-- ================= SLIDE 4: RÉGIMEN E > E0 ================= -->
+    <!-- ================= SLIDE 7: RÉGIMEN E > E0 (ORIGINAL SLIDE 4) ================= -->
     <div class="slide w-full max-w-6xl flex-col gap-5 my-auto">
       <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
-        <i class="fa-solid fa-arrow-up-right-dots"></i> 4. Régimen $E > E_0$
+        <i class="fa-solid fa-arrow-up-right-dots"></i> 7. Régimen $E > E_0$
       </div>
 
       <h2 class="font-heading text-2xl md:text-3xl font-bold text-white">
@@ -290,8 +451,8 @@
               $$f(E) = \cos(\alpha a_1)\cos(\beta a_2) - \frac{\alpha^2 + \beta^2}{2\alpha\beta}\sin(\alpha a_1)\sin(\beta a_2)$$
             </div>
             <div class="grid grid-cols-2 gap-2 mt-2 text-[11px] font-mono text-slate-400">
-              <div class="bg-slate-900/60 p-1.5 rounded text-center">$\alpha = \sqrt{2mE/\hbar^2}$</div>
-              <div class="bg-slate-900/60 p-1.5 rounded text-center">$\beta = \sqrt{2m(E-E_0)/\hbar^2}$</div>
+              <div class="bg-slate-900/60 p-1.5 rounded text-center">$\alpha = \sqrt{2m_e E/\hbar^2}$</div>
+              <div class="bg-slate-900/60 p-1.5 rounded text-center">$\beta = \sqrt{2m_e(E-E_0)/\hbar^2}$</div>
             </div>
           </div>
 
@@ -319,10 +480,10 @@
       </div>
     </div>
 
-    <!-- ================= SLIDE 5: EL VECTOR DE ONDA K ================= -->
+    <!-- ================= SLIDE 8: EL VECTOR DE ONDA K (ORIGINAL SLIDE 5) ================= -->
     <div class="slide w-full max-w-5xl flex-col gap-5 my-auto">
       <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
-        <i class="fa-solid fa-vector-square"></i> 5. Naturaleza del Vector de Onda $k$
+        <i class="fa-solid fa-vector-square"></i> 8. Naturaleza del Vector de Onda $k$
       </div>
 
       <h2 class="font-heading text-3xl md:text-4xl font-bold text-white">
@@ -336,9 +497,7 @@
         $$k = \pm \frac{1}{a}\arccos(f(E)) + \frac{2n\pi}{a}, \quad n \in \mathbb{Z}$$
       </div>
 
-      <!-- Real vs Complex comparison -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <!-- Real k -->
         <div class="bg-brand-card border border-emerald-500/30 p-5 rounded-2xl flex flex-col gap-3">
           <div class="flex items-center gap-2 text-emerald-400 font-bold font-heading text-base">
             <i class="fa-solid fa-circle-check"></i> Caso Real: $|f(E)| \le 1$
@@ -354,7 +513,6 @@
           </p>
         </div>
 
-        <!-- Complex k -->
         <div class="bg-brand-card border border-rose-500/30 p-5 rounded-2xl flex flex-col gap-3">
           <div class="flex items-center gap-2 text-rose-400 font-bold font-heading text-base">
             <i class="fa-solid fa-circle-xmark"></i> Caso Complejo: $|f(E)| > 1$
@@ -372,14 +530,14 @@
       </div>
     </div>
 
-    <!-- ================= SLIDE 6: EL GAP DE ENERGÍA ================= -->
+    <!-- ================= SLIDE 9: EL GAP DE ENERGÍA (ORIGINAL SLIDE 6) ================= -->
     <div class="slide w-full max-w-5xl flex-col gap-5 my-auto">
       <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
-        <i class="fa-solid fa-bullseye"></i> 6. El Origen Físico del Gap
+        <i class="fa-solid fa-bullseye"></i> 9. El Origen Físico del Gap
       </div>
 
       <h2 class="font-heading text-2xl md:text-3xl font-bold text-white">
-        Interferencia de Bragg &amp; Transición Cuántica
+        Interferencia de Bragg & Transición Cuántica
       </h2>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -408,7 +566,6 @@
         </div>
       </div>
 
-      <!-- Quantum Jump Clarification Box -->
       <div class="bg-slate-900 border border-purple-500/30 p-4 rounded-2xl flex flex-col gap-2">
         <h4 class="font-heading font-bold text-xs md:text-sm text-purple-300 flex items-center gap-2">
           <i class="fa-solid fa-bolt"></i> ¿Cómo "salta" el electrón el gap si la onda no habita en él?
@@ -419,19 +576,17 @@
       </div>
     </div>
 
-    <!-- ================= SLIDE 7: CLASIFICACIÓN FÍSICA ================= -->
+    <!-- ================= SLIDE 10: CLASIFICACIÓN FÍSICA (ORIGINAL SLIDE 7) ================= -->
     <div class="slide w-full max-w-5xl flex-col gap-5 my-auto">
       <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 text-xs font-semibold uppercase tracking-wider w-fit">
-        <i class="fa-solid fa-layer-group"></i> 7. Estados Estacionarios &amp; Clasificación
+        <i class="fa-solid fa-layer-group"></i> 10. Estados Estacionarios & Clasificación
       </div>
 
       <h2 class="font-heading text-2xl md:text-3xl font-bold text-white">
         Estructura de Bandas en Materiales Reales
       </h2>
 
-      <!-- Materials Comparison Grid -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <!-- Conductors -->
         <div class="bg-brand-card border border-emerald-500/30 p-4 rounded-2xl flex flex-col gap-2.5">
           <span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-bold rounded-md w-fit">CONDUCTORES</span>
           <h3 class="font-heading font-bold text-base text-white">Gap Nulo ($E_g = 0$)</h3>
@@ -440,7 +595,6 @@
           </p>
         </div>
 
-        <!-- Semiconductors -->
         <div class="bg-brand-card border border-amber-500/30 p-4 rounded-2xl flex flex-col gap-2.5">
           <span class="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[11px] font-bold rounded-md w-fit">SEMICONDUCTORES</span>
           <h3 class="font-heading font-bold text-base text-white">Gap Moderado ($E_g \approx 1\text{ eV}$)</h3>
@@ -449,7 +603,6 @@
           </p>
         </div>
 
-        <!-- Insulators -->
         <div class="bg-brand-card border border-rose-500/30 p-4 rounded-2xl flex flex-col gap-2.5">
           <span class="px-2.5 py-1 bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[11px] font-bold rounded-md w-fit">AISLANTES</span>
           <h3 class="font-heading font-bold text-base text-white">Gap Amplio ($E_g > 4\text{ eV}$)</h3>
@@ -459,7 +612,6 @@
         </div>
       </div>
 
-      <!-- Conclusion Banner -->
       <div class="bg-gradient-to-r from-sky-900/40 via-brand-card to-amber-900/40 border border-brand-border p-4 rounded-2xl flex items-center justify-between">
         <div>
           <h4 class="font-heading font-bold text-xs md:text-sm text-white">Definición de Estado Estacionario</h4>
@@ -531,6 +683,7 @@
       const margin = { top: 35, right: 25, bottom: 45, left: 55 };
       const plotW = width - margin.left - margin.right;
       const plotH = height - margin.top - margin.bottom;
+      const clipId = `clip-${containerId}`;
 
       const minY = -3.0;
       const maxY = 3.0;
@@ -548,25 +701,32 @@
         points.push({ e, f });
       }
 
-      // Build SVG string
-      let svg = `<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" class="w-full h-full font-sans">`;
+      // Build SVG string with explicit width/height attributes for all browsers
+      let svg = `<svg width="100%" height="100%" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" class="w-full h-full font-sans">`;
+      svg += `<defs><clipPath id="${clipId}"><rect x="${margin.left}" y="${margin.top}" width="${plotW}" height="${plotH}" /></clipPath></defs>`;
       
       // Background
       svg += `<rect width="${width}" height="${height}" fill="#0d1322" rx="12" />`;
 
-      // Find band intervals for shading
+      // Title
+      if (titleText) {
+        svg += `<text x="${margin.left}" y="22" fill="#e2e8f0" font-size="13" font-weight="bold">${titleText}</text>`;
+      }
+
       // Shading regions: green where |f| <= 1, pink where |f| > 1
+      svg += `<g clip-path="url(#${clipId})">`;
       for (let i = 0; i < points.length - 1; i++) {
         const p1 = points[i];
-        const p2 = points[i+1];
+        const p2 = points[i + 1];
         const x1 = scaleX(p1.e);
         const x2 = scaleX(p2.e);
 
-        const isAllowed = Math.abs((p1.f + p2.f)/2) <= 1.0;
+        const isAllowed = Math.abs((p1.f + p2.f) / 2) <= 1.0;
         const color = isAllowed ? 'rgba(16, 185, 129, 0.22)' : 'rgba(244, 63, 94, 0.12)';
         
-        svg += `<rect x="${x1}" y="${margin.top}" width="${Math.max(1, x2 - x1)}" height="${plotH}" fill="${color}" />`;
+        svg += `<rect x="${x1}" y="${margin.top}" width="${Math.max(1.2, x2 - x1 + 0.3)}" height="${plotH}" fill="${color}" />`;
       }
+      svg += `</g>`;
 
       // Grid Lines Y
       [-2, -1, 0, 1, 2].forEach(yVal => {
@@ -574,7 +734,7 @@
         const stroke = (yVal === 0) ? '#475569' : '#1e293b';
         const dash = (yVal === 0) ? '' : 'stroke-dasharray="4,4"';
         svg += `<line x1="${margin.left}" y1="${yPx}" x2="${width - margin.right}" y2="${yPx}" stroke="${stroke}" stroke-width="1" ${dash} />`;
-        svg += `<text x="${margin.left - 10}" y="${yPx + 4}" fill="#94a3b8" font-size="11" text-anchor="end font-mono">${yVal}</text>`;
+        svg += `<text x="${margin.left - 10}" y="${yPx + 4}" fill="#94a3b8" font-size="11" text-anchor="end" font-family="monospace">${yVal}</text>`;
       });
 
       // Grid Lines & Ticks X
@@ -600,52 +760,84 @@
 
       // Curve Path f(E)
       let pathD = '';
-      let started = false;
-      points.forEach(p => {
-        const x = scaleX(p.e);
-        const y = Math.max(margin.top - 10, Math.min(height - margin.bottom + 10, scaleY(p.f)));
-        if (!started) {
-          pathD += `M ${x} ${y}`;
-          started = true;
-        } else {
-          pathD += ` L ${x} ${y}`;
-        }
+      points.forEach((p, idx) => {
+        const clampedF = Math.max(-10, Math.min(10, p.f));
+        const x = scaleX(p.e).toFixed(2);
+        const y = scaleY(clampedF).toFixed(2);
+        pathD += (idx === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
       });
-      svg += `<path d="${pathD}" stroke="#38bdf8" stroke-width="2.6" fill="none" stroke-linejoin="round" />`;
 
-      // Axes Borders
-      svg += `<rect x="${margin.left}" y="${margin.top}" width="${plotW}" height="${plotH}" fill="none" stroke="#334155" stroke-width="1.5" />`;
-
-      // Title & Labels
-      svg += `<text x="${width / 2}" y="22" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle">${titleText}</text>`;
-      svg += `<text x="${width / 2}" y="${height - 10}" fill="#cbd5e1" font-size="11" font-weight="500" text-anchor="middle">Energía del electrón (E)</text>`;
-      svg += `<text x="18" y="${height / 2}" fill="#cbd5e1" font-size="11" font-weight="500" text-anchor="middle" transform="rotate(-90 18 ${height/2})">f(E) = cos(ka)</text>`;
-
-      // Legend Box (Top Right)
-      const legX = width - margin.right - 185;
-      const legY = margin.top + 10;
-      svg += `<g transform="translate(${legX}, ${legY})">`;
-      svg += `<rect width="175" height="75" fill="#0b0f19" fill-opacity="0.85" stroke="#334155" stroke-width="1" rx="6" />`;
-      svg += `<line x1="10" y1="15" x2="30" y2="15" stroke="#38bdf8" stroke-width="2.5" />`;
-      svg += `<text x="36" y="18" fill="#e2e8f0" font-size="10">f(E)</text>`;
-      svg += `<line x1="10" y1="32" x2="30" y2="32" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="4,3" />`;
-      svg += `<text x="36" y="35" fill="#e2e8f0" font-size="10">Límites f(E) = ±1</text>`;
-      svg += `<rect x="10" y="45" width="20" height="10" fill="rgba(16, 185, 129, 0.4)" />`;
-      svg += `<text x="36" y="53" fill="#e2e8f0" font-size="10">Bandas Permitidas</text>`;
-      svg += `<rect x="10" y="60" width="20" height="10" fill="rgba(244, 63, 94, 0.3)" />`;
-      svg += `<text x="36" y="68" fill="#e2e8f0" font-size="10">Bandas Prohibidas</text>`;
+      svg += `<g clip-path="url(#${clipId})">`;
+      svg += `<path d="${pathD}" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linejoin="round" />`;
       svg += `</g>`;
+
+      // Axis labels
+      svg += `<text x="${margin.left + plotW / 2}" y="${height - 8}" fill="#94a3b8" font-size="12" text-anchor="middle">Energía (E)</text>`;
+      svg += `<text x="16" y="${margin.top + plotH / 2}" fill="#94a3b8" font-size="12" text-anchor="middle" transform="rotate(-90, 16, ${margin.top + plotH / 2})">f(E) = cos(ka)</text>`;
 
       svg += `</svg>`;
       container.innerHTML = svg;
     }
 
-    // --- SLIDES NAVIGATION LOGIC ---
+    // --- SLIDE NAVIGATION ---
     let currentSlide = 0;
     const slides = document.querySelectorAll('.slide');
     const totalSlides = slides.length;
 
-    function initKaTeX() {
+    function initDots() {
+      const dotsNav = document.getElementById('dotsNav');
+      if (!dotsNav) return;
+      dotsNav.innerHTML = '';
+      for (let i = 0; i < totalSlides; i++) {
+        const btn = document.createElement('button');
+        btn.className = `h-2 rounded-full transition-all duration-300 ${i === 0 ? 'w-6 bg-sky-400' : 'w-2 bg-slate-700 hover:bg-slate-500'}`;
+        btn.onclick = () => goToSlide(i);
+        dotsNav.appendChild(btn);
+      }
+    }
+
+    function updateUI() {
+      slides.forEach((slide, idx) => {
+        slide.classList.toggle('active', idx === currentSlide);
+      });
+
+      document.getElementById('slideCounter').textContent = `Diapositiva ${currentSlide + 1} de ${totalSlides}`;
+      document.getElementById('progressBar').style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+      document.getElementById('prevBtn').disabled = currentSlide === 0;
+      document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+
+      const dots = document.getElementById('dotsNav').children;
+      for (let i = 0; i < dots.length; i++) {
+        dots[i].className = `h-2 rounded-full transition-all duration-300 ${
+          i === currentSlide ? 'w-6 bg-sky-400' : 'w-2 bg-slate-700 hover:bg-slate-500'
+        }`;
+      }
+
+      const mainEl = document.getElementById('mainContainer');
+      if (mainEl) mainEl.scrollTop = 0;
+    }
+
+    function changeSlide(step) {
+      const target = currentSlide + step;
+      if (target >= 0 && target < totalSlides) {
+        currentSlide = target;
+        updateUI();
+      }
+    }
+
+    function goToSlide(index) {
+      if (index >= 0 && index < totalSlides) {
+        currentSlide = index;
+        updateUI();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') changeSlide(1);
+      if (e.key === 'ArrowLeft') changeSlide(-1);
+    });
+
+    function renderAllMath() {
       if (typeof renderMathInElement === 'function') {
         renderMathInElement(document.body, {
           delimiters: [
@@ -657,90 +849,22 @@
       }
     }
 
-    function setupDots() {
-      const dotsNav = document.getElementById('dotsNav');
-      dotsNav.innerHTML = '';
-      for (let i = 0; i < totalSlides; i++) {
-        const dot = document.createElement('button');
-        dot.className = `h-2 rounded-full transition-all ${i === 0 ? 'bg-sky-400 w-6' : 'bg-slate-700 w-2 hover:bg-slate-500'}`;
-        dot.onclick = () => goToSlide(i);
-        dotsNav.appendChild(dot);
-      }
+    function initApp() {
+      initDots();
+      updateUI();
+      renderPlot('plotGlobal', 0.05, 30, 'f(E) en Rango Completo [0, 30]', true);
+      renderPlot('plotRegion1', 0.05, 10, 'Régimen 0 < E < E₀', false);
+      renderPlot('plotRegion2', 10, 35, 'Régimen E > E₀', false);
+      renderAllMath();
     }
 
-    function updateSlide() {
-      slides.forEach((slide, index) => {
-        if (index === currentSlide) {
-          slide.classList.add('active');
-        } else {
-          slide.classList.remove('active');
-        }
-      });
-
-      document.getElementById('slideCounter').innerText = `Diapositiva ${currentSlide + 1} de ${totalSlides}`;
-      const progressPercent = ((currentSlide + 1) / totalSlides) * 100;
-      document.getElementById('progressBar').style.width = `${progressPercent}%`;
-
-      document.getElementById('prevBtn').disabled = currentSlide === 0;
-      document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
-
-      const dots = document.getElementById('dotsNav').children;
-      for (let i = 0; i < dots.length; i++) {
-        if (i === currentSlide) {
-          dots[i].className = 'w-6 h-2 rounded-full bg-sky-400 transition-all';
-        } else {
-          dots[i].className = 'w-2 h-2 rounded-full bg-slate-700 hover:bg-slate-500 transition-all';
-        }
-      }
-
-      // Render graphs if visiting relevant slides
-      if (currentSlide === 1) {
-        renderPlot('plotGlobal', 0, 30, 'Función Trascendental Kronig-Penney (E = 0 a 30)', true);
-      } else if (currentSlide === 2) {
-        renderPlot('plotRegion1', 0, 10, 'Régimen de Tunelamiento: 0 < E < E₀ (Funciones Hiperbólicas)', true);
-      } else if (currentSlide === 3) {
-        renderPlot('plotRegion2', 10, 35, 'Régimen de Propagación: E > E₀ (Funciones Trigonométricas)', false);
-      }
-
-      initKaTeX();
+    // Ejecutar inmediatamente si el DOM ya está listo (evita fallo en visores embebidos)
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initApp);
+    } else {
+      initApp();
     }
-
-    function changeSlide(dir) {
-      const newIndex = currentSlide + dir;
-      if (newIndex >= 0 && newIndex < totalSlides) {
-        currentSlide = newIndex;
-        updateSlide();
-      }
-    }
-
-    function goToSlide(index) {
-      if (index >= 0 && index < totalSlides) {
-        currentSlide = index;
-        updateSlide();
-      }
-    }
-
-    // Keyboard controls
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === 'Space') changeSlide(1);
-      else if (e.key === 'ArrowLeft') changeSlide(-1);
-    });
-
-    // Touch swipe support
-    let touchStartX = 0;
-    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
-    document.addEventListener('touchend', (e) => {
-      const touchEndX = e.changedTouches[0].screenX;
-      if (touchEndX < touchStartX - 50) changeSlide(1);
-      if (touchEndX > touchStartX + 50) changeSlide(-1);
-    });
-
-    // Initialize on page load
-    window.addEventListener('DOMContentLoaded', () => {
-      setupDots();
-      updateSlide();
-      setTimeout(initKaTeX, 300);
-    });
+    window.addEventListener('load', renderAllMath);
   </script>
 </body>
 </html>
